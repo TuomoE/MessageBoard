@@ -42,9 +42,8 @@ module.exports.getRecentPosts = function(req,res){
     var options = {
         path:'messages',
         options:{limit:5,sort:{_id: -1}}
-        //match:{'subject':'asd'}
     };
-    User.findOne({name:req.query.id}).populate(options).exec(function(err,popul){
+    User.findOne({name:req.user.name}).populate(options).exec(function(err,popul){
         res.send(popul);
     });
 }
@@ -52,10 +51,24 @@ module.exports.getRecentPosts = function(req,res){
 module.exports.getFilteredData = function(req,res){
     
     var data = JSON.parse(req.query.id);
+    console.log(data.query1);
+    console.log(data.query2);
     User.find(data.query1).populate(data.query2).exec(function(err,data){
-        var temp = {
-            all:data
+        
+        var temp = {};
+        temp.all = [];
+        for(var i = 0; i < data.length; i++)
+        {
+            if(data[i].messages.length > 0)
+            {
+                console.log('here we find the data');
+                console.log(data[i]);
+                temp.all[0] = data[i];
+                break;
+            }
         }
+        
+        //console.log(data);
         res.send(temp);
     });
 }

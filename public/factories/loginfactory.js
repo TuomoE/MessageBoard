@@ -1,14 +1,9 @@
-module.factory('LoginFactory',['$resource','$rootScope','$location',function($resource,$rootScope,$location){
+module.factory('LoginFactory',['$resource','$location',function($resource,$location){
     
     var factory = {};
-    
     factory.userLogin = function(userData){
-        
         var res = $resource('/app/login',{},{post:{method:'POST'}});
-        res.post(userData).$promise.then(function(){
-            
-            factory.userName = userData.username;
-            $rootScope.isAuthenticated = true;
+        res.post(userData).$promise.then(function(data){
             $location.path('/user');
         });
     }

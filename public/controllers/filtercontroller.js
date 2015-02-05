@@ -2,32 +2,24 @@ module.controller('FilterController',['$scope','FilterFactory',function($scope,F
     
     $scope.filter = {};
     
+    $scope.filter.nodata = "Search messages by name or subject"
+    
     FilterFactory.getFilterData().then(function(data){
         $scope.filter.names = data.names;
         $scope.filter.subjects = data.subjects;
     });
     
-    //Handle selection of name
-    $('.dropdown-menu li > a').click(function(e){
-        console.log(this.innerHTML);
-    });
-    
-    //Handle selection of topic
-    $('.dropdown-menu2 li > a').click(function(e){
-        console.log(this.innerHTML);
-    })
     
     $scope.filter.getResults = function(){
       
         var queryObject = {};
-        
-        if($scope.filter.s_name !== undefined){
+        if($scope.filter.s_name != undefined && $scope.filter.s_name != null){
             queryObject.query1 = {name:$scope.filter.s_name};
         }
         else{
             queryObject.query1 = {};
         }
-        if($scope.filter.s_subject !== undefined){
+        if($scope.filter.s_subject !== undefined && $scope.filter.s_subject != null){
             queryObject.query2 = {path:'messages',match:{subject:$scope.filter.s_subject}};
         }
         else{
@@ -35,7 +27,19 @@ module.controller('FilterController',['$scope','FilterFactory',function($scope,F
         }
         
         FilterFactory.getFilteredData(queryObject).then(function(data){
-            console.log(data);
+            try{
+                if(data.all[0].messages.length === 0){
+                    $scope.filter.nodata = 'No results for your search.Sorry!'
+                }
+                else{
+                    $scope.filter.nodata = "";
+                    $scope.filter.messages = data.all[0].messages;
+                    $scope.filter.sender = data.all[0].name;
+                }
+            }
+            catch(err){
+                $scope.filter.nodata = 'No results for your search.Sorry!'
+            }
         });
     }
     

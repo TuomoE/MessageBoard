@@ -1,11 +1,11 @@
-var module = angular.module('MeanStack',['ngRoute','ngResource','ngAnimate']);
+var module = angular.module('MeanStack',['ngRoute','ngResource','ngAnimate','ngCookies']);
 
 module.config(function($routeProvider,$locationProvider){
     
     $locationProvider.html5Mode(true);
     $routeProvider.when('/',{
         templateUrl:'partials/login.html',
-        controller:'LoginController'
+        controller:'LoginController',
     });
     
     $routeProvider.when('/user',{
@@ -23,17 +23,21 @@ module.config(function($routeProvider,$locationProvider){
     $routeProvider.otherwise({redirectTo: '/'});
 });
 
-function loginRequired($location, $q,$rootScope){
+function loginRequired($q,$location,$resource){
     
     var deferred = $q.defer();
-
-    if(!$rootScope.isAuthenticated) {
-        deferred.reject()
-        $location.path('/');
-    } else {
-        deferred.resolve()
-    }
-
+        
+    $resource('/authenticate').get().$promise.then(function(auth){
+        
+        if(auth.authenticated){
+            deferred.resolve();
+        }
+        else{
+            deferred.reject();
+            $location.path('/');
+        }
+    });
+    
     return deferred.promise;
 }
 

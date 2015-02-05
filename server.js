@@ -17,6 +17,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+
 //This middleware is called for every request
 app.use(function(req,res,next){
     //Store queries object to request
@@ -30,13 +31,23 @@ app.use(function(req,res,next){
 //Point static files to public folder
 app.use('/',express.static(__dirname + '/public'));
 app.use(bodyParser.json());
-app.use(session({secret: 'liirumlaarum', saveUninitialized: true, resave: true,}));
+app.use(session({secret: 'liirumlaarum', saveUninitialized: true, resave: true,cookie: {maxAge: 12000}}));
 app.use(passport.initialize());
 app.use(passport.session());
 
 //Here is my middleware
 app.use('/app',user);
 app.use('/message',message);
+
+app.get('/authenticate',function(req,res){
+    
+    if(req.user){
+        res.send({authenticated:true});
+    }
+    else{
+        res.send({authenticated:false});
+    }
+});
 
 app.get('/*',function(req,res){
     

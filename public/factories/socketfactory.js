@@ -2,8 +2,8 @@ module.factory('SocketFactory',['$resource',function($resource){
     
     var factory={};
     
-    factory.getRecentPosts = function(user){
-        return $resource('/message/',{id:user}).get().$promise;
+    factory.getRecentPosts = function(){
+        return $resource('/message/').get().$promise;
     }
     
     //Create client socket

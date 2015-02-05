@@ -3,10 +3,9 @@ module.controller('MessageController',['$scope','$rootScope','$location','Socket
     $scope.message = {};
     $scope.message.messages = [];
     $scope.message.isVisible = false;
-    $scope.message.user = LoginFactory.userName;
-    
-    SocketFactory.getRecentPosts(LoginFactory.userName).then(function(data){
+    SocketFactory.getRecentPosts().then(function(data){
         $scope.message.messages = data.messages;
+        $scope.message.user = data.name;
     });
     
     $scope.message.new = function(){
@@ -21,7 +20,7 @@ module.controller('MessageController',['$scope','$rootScope','$location','Socket
     
     $scope.message.send = function(){
         var message = {};
-        message.owner = LoginFactory.userName;
+        message.owner = $scope.message.user;
         message.subject = $scope.message.subject;
         message.text = $scope.message.text;
         message.timestamp = new Date();
