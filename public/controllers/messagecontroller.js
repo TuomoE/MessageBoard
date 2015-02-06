@@ -1,22 +1,12 @@
-module.controller('MessageController',['$scope','$rootScope','$location','SocketFactory','LoginFactory',function($scope,$rootScope,$location,SocketFactory,LoginFactory){
+module.controller('MessageController',['$scope','LoginFactory','SocketFactory',function($scope,LoginFactory,SocketFactory){
     
     $scope.message = {};
     $scope.message.messages = [];
-    $scope.message.isVisible = false;
+    
     SocketFactory.getRecentPosts().then(function(data){
         $scope.message.messages = data.messages;
         $scope.message.user = data.name;
     });
-    
-    $scope.message.new = function(){
-       $scope.message.subject = "";
-       $scope.message.text = "";
-       $scope.message.isVisible = $scope.message.isVisible ? false:true;
-    }
-    
-    $scope.message.showAll = function(){
-        $location.path('/filter');
-    }
     
     $scope.message.send = function(){
         var message = {};

@@ -83,3 +83,23 @@ module.exports.getFilterNames = function(req,res){
         });
     });
 }
+
+module.exports.getMesagesForUser = function(req,res){
+
+    var options = {
+        path:'messages',
+        options:{limit:30,sort:{_id: -1}}
+    };
+
+    User.findOne({name:req.user.name}).populate(options).exec(function(err,popul){
+        res.send(popul);
+    });
+}
+
+module.exports.deleteMessage = function(req,res){
+    
+    Message.findOne({_id:req.query.id}).remove().exec(function(err,done){
+        
+        res.send('Element deleted');
+    });
+}

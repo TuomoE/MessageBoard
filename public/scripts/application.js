@@ -1,6 +1,27 @@
 var module = angular.module('MeanStack',['ngRoute','ngResource','ngAnimate','ngCookies']);
 
-module.config(function($routeProvider,$locationProvider){
+var authenticationFailed = function($q,$rootScope){
+    var responseInterceptor = {
+        response: function(response) {
+            if(response.status === 401){
+                console.log('Authentication failed');
+            }
+            return response;
+        },
+        responseError:function(err){
+            //Login failed....
+            if(err.status === 401){
+                console.log('Login failed');
+                $rootScope.$broadcast('rootScope:broadcast','Authentication Failed');
+            }
+            return err;
+        }
+    }
+    
+    return responseInterceptor;
+}
+
+module.config(function($routeProvider,$locationProvider,$httpProvider){
     
     $locationProvider.html5Mode(true);
     $routeProvider.when('/',{
@@ -20,7 +41,20 @@ module.config(function($routeProvider,$locationProvider){
         resolve:{loginRequired:loginRequired}
     });
     
+    $routeProvider.when('/new',{
+        templateUrl:'partials/newMessage.html',
+        controller:'MessageController',
+        resolve:{loginRequired:loginRequired}
+    });
+    
+    $routeProvider.when('/delete',{
+        templateUrl:'partials/delete.html',
+        controller:'DeleteController',
+        resolve:{loginRequired:loginRequired}
+    });
+    
     $routeProvider.otherwise({redirectTo: '/'});
+    $httpProvider.interceptors.push(authenticationFailed);
 });
 
 function loginRequired($q,$location,$resource){

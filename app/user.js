@@ -12,10 +12,12 @@ router.post('/register',function(req,res){
 });
 
  router.get('/logout', function(req, res) {
-    console.log('logging out');
-    req.logOut();
-    console.log(req.user); 
-    res.redirect('/');
+    req.logout();
+    req.session.destroy();
+    req.session = null;
+    req.user = null; 
+    res.clearCookie('user');
+    res.send('logged out');
 });
 
 
