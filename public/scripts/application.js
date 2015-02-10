@@ -24,6 +24,7 @@ var authenticationFailed = function($q,$rootScope){
 module.config(function($routeProvider,$locationProvider,$httpProvider){
     
     $locationProvider.html5Mode(true);
+    
     $routeProvider.when('/',{
         templateUrl:'partials/login.html',
         controller:'LoginController',
@@ -50,6 +51,12 @@ module.config(function($routeProvider,$locationProvider,$httpProvider){
     $routeProvider.when('/delete',{
         templateUrl:'partials/delete.html',
         controller:'DeleteController',
+        resolve:{loginRequired:loginRequired}
+    });
+    
+    $routeProvider.when('/update',{
+        templateUrl:'partials/update.html',
+        controller:'UpdateController',
         resolve:{loginRequired:loginRequired}
     });
     

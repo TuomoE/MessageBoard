@@ -19,6 +19,7 @@ module.controller('MessageController',['$scope','LoginFactory','SocketFactory',f
         $scope.message.subject = "";
         $scope.message.text = "";
     }
+    
     //Will be called when server send socket response
     SocketFactory.notify = function(data){
         $scope.message.messages.push(data);

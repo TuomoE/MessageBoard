@@ -19,4 +19,9 @@ module.controller('NavController',['$scope','$location','SocketFactory',function
     $scope.nav.delete = function(){
         $location.path('/delete');
     }
+    
+    $scope.nav.update = function(){
+        $location.path('/update');
+    }
+    
 }]);

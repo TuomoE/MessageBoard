@@ -17,7 +17,7 @@ module.factory('SocketFactory',['$resource','$location',function($resource,$loca
     
     factory.notify;
     
-    //This will tirgger when server broadcasts message
+    //This will trigger when server broadcasts message
     //broadcast_msg
     socket.on('broadcast_msg',function(data){
         
